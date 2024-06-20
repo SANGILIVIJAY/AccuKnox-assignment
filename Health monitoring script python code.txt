@@ -1,0 +1,96 @@
+Sure, let's work on the following two objectives using Python:
+
+1. **System Health Monitoring Script**: Develop a script that monitors CPU usage, memory usage, disk space, and running processes. It will send alerts to the console if any metric exceeds predefined thresholds.
+   
+2. **Application Health Checker**: Write a script to check the uptime of an application by assessing its HTTP status codes. It should determine if the application is 'up' (functioning correctly) or 'down' (unavailable or not responding).
+
+Let's proceed with Python implementations for each.
+
+### 1. System Health Monitoring Script
+
+```python
+import psutil
+
+# Define thresholds for monitoring
+CPU_THRESHOLD = 80  # in percentage
+MEMORY_THRESHOLD = 80  # in percentage
+DISK_THRESHOLD = 80  # in percentage
+
+# Function to check CPU usage
+def check_cpu_usage():
+    cpu_usage = psutil.cpu_percent(interval=1)
+    if cpu_usage > CPU_THRESHOLD:
+        print(f"CPU usage is {cpu_usage}% which exceeds the threshold of {CPU_THRESHOLD}%")
+
+# Function to check memory usage
+def check_memory_usage():
+    memory_usage = psutil.virtual_memory().percent
+    if memory_usage > MEMORY_THRESHOLD:
+        print(f"Memory usage is {memory_usage}% which exceeds the threshold of {MEMORY_THRESHOLD}%")
+
+# Function to check disk usage
+def check_disk_usage():
+    disk_usage = psutil.disk_usage('/').percent
+    if disk_usage > DISK_THRESHOLD:
+        print(f"Disk usage is {disk_usage}% which exceeds the threshold of {DISK_THRESHOLD}%")
+
+# Function to check running processes
+def check_running_processes():
+    processes = psutil.process_iter()
+    processes_count = sum(1 for _ in processes)
+    if processes_count > 0:
+        print(f"There are {processes_count} processes running.")
+
+# Main function to run all checks
+def main():
+    check_cpu_usage()
+    check_memory_usage()
+    check_disk_usage()
+    check_running_processes()
+
+if __name__ == "__main__":
+    main()
+```
+
+
+
+### 2. Application Health Checker
+
+```python
+import requests
+import time
+
+# URL of the application to check
+APP_URL = "http://example.com"  # Replace with your application URL
+
+# Function to check application status
+def check_application_status():
+    try:
+        response = requests.get(APP_URL)
+        if response.status_code == 200:
+            print(f"Application at {APP_URL} is UP. Status code: {response.status_code}")
+        else:
+            print(f"Application at {APP_URL} is DOWN. Status code: {response.status_code}")
+    except requests.ConnectionError:
+        print(f"Application at {APP_URL} is DOWN. Connection Error.")
+
+# Main function to continuously check application status
+def main():
+    while True:
+        check_application_status()
+        time.sleep(5)  # Check every 5 seconds
+
+if __name__ == "__main__":
+    main()
+```
+
+
+
+### Explanation:
+
+- **System Health Monitoring Script**: Utilizes `psutil` to fetch CPU usage, memory usage, disk usage, and count of running processes. Thresholds are predefined at the beginning and alerts are printed to the console if any metric exceeds its threshold.
+  
+- **Application Health Checker**: Uses the `requests` library to send HTTP GET requests to the specified `APP_URL`. It checks the status code of the response:
+  - If `status_code == 200`, it indicates the application is 'UP'.
+  - Otherwise, it considers the application 'DOWN' and prints the status code.
+   Adjust parameters and thresholds as per your specific requirements.
